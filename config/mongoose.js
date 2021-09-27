@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 const logger = require('./../config/logger');
+const { mongo, env } = require('./vars');
 
-const migration = require('../lib/migirations.lib');
+const migration = require('../lib/migration.lib');
 
 // set mongoose Promise to Bluebird
 mongoose.Promise = Promise;
-const env = process.env.NODE_ENV;
-let url = process.env.MONGO_URI;
-if (env === 'test') {
-  url += '_test';
-}
 
 // Exit application on error
 mongoose.connection.on('error', (err) => {
@@ -28,16 +24,21 @@ if (env === 'development') {
  * @returns {object} Mongoose connection
  * @public
  */
-mongoose.plugin(require('mongoose-hidden')({
-  defaultHidden: {'_id': false, password: true, pin: true, '__v': true}
-}));
- exports.connect = () => {
-  return mongoose
-      .connect(url)
-      .then(async () => {
-        console.log('mongoDB connected...')
-        await migration.migratePermissions()
-        await migration.migrateRoles()
-        await migration.migrateUsers()
-      }).catch(err => console.error('Database connection failed', err));
+exports.connect = () => {
+  mongoose
+    .connect(mongo, {
+    
+      keepAlive: 1,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      
+    })
+    .then(async () => {
+      console.log('mongoDB connected...')
+
+      await migration.migratePermissions()
+      await migration.migrateRoles()
+      await migration.migrateUsers()
+    });
+  return mongoose.connection;
 };

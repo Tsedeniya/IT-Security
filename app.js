@@ -1,14 +1,14 @@
 var createError = require('http-errors');
 const express = require('express');
 var path = require('path');
-const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-
+var jwt = require('express-jwt');
 
 const cors = require('cors')
 var allrouters = require('./routes/It-secuity.route');
-
+const { jwt_key, port } = require('./config/vars');
+const { routes } = require('./config/route');
 require('dotenv').config();
 
 const mongoose = require('./config/mongoose');
@@ -29,15 +29,10 @@ app.use(cookieParser());
 
 // view engine setup
 
-// app.use(jwt({ secret: jwt_key, algorithms: ['HS256']})
-// .unless({path:[
-//     '/IT-Security',
-//     '/IT-Security/auth/login',
-//     '/IT-Security/auth/signup',
-    
-// ]}));
+app.use(jwt({ secret: jwt_key, algorithms: ['HS256']})
+.unless({path:routes.public}));
 
-app.use('/', allrouters);
+app.use('/v1', allrouters);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

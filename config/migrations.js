@@ -3,27 +3,27 @@ permissions =[
     'view user',
     'view all users',
     'delete user',
-   
-    'Add feedbacks',
-    'update feedback',
-    'view feedbacks',
+    'update user',
     
-    'view all feedbacks',
+    'create feedback',
+    'delete feedback',
+    'update feedback',
+    'view feedback',
+    'view all feedbacks'
+    
 
     
 
 ]
 
 roles={
-    admin:[ 'view user',
-    'view all users',
-    'delete user',
-    'view all feedbacks'],
-    member:[
-        'Add feedbacks',
-        'update feedback',
-        'view feedbacks'
-        
+    admin:[...permissions],
+    user:[],
+   member:[
+    'create feedback',
+    'delete feedback',
+    'update feedback',
+    'view feedback',
     ]
 }
 

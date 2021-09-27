@@ -3,22 +3,15 @@ var {hasPermissions} = require('../../middleware/auth')
 const userController = require('../../controllers/user-controller');
 
   
-router.get('/',userController.getAllUsers)
+router.get('/',hasPermissions(['view all users']),userController.getAllUsers)
 
-router.get('/:id', userController.getUserById);
+router.get('/:id',hasPermissions(['view user']), userController.getUserById);
+router.delete('/delete/:id',hasPermissions(['delete user']) ,userController.deleteUser);
   
-router.post('/create',userController.create);
+router.patch('/update/:id',hasPermissions(['user']),userController.updateUser)
 
- 
-router.delete('/delete/:id' ,userController.deleteUser);
   
-router.patch('/update/:id',userController.updateUser)
-
-  //view a user 
- 
-
-  //view all users
   
 
-  module.exports = router;
+module.exports = router;
 

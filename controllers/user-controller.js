@@ -1,7 +1,11 @@
 const Joi = require('joi');
 const userModel = require('../models/user-model');
-
-
+const roleModel = require('../models/role-model');
+role = [
+    {
+        roles:['member']
+    }
+]
 exports.create = async(req,res)=>{
   try {
     const schema = Joi.object({
@@ -17,7 +21,19 @@ exports.create = async(req,res)=>{
     if(schema.validate(req.body).error){
         throw new Error(schema.validate(req.body).error)
     }
-      let user = await userModel.create(req.body);
+    let data = await roleModel.find({
+        name: {
+            $in: role.roles // [1,2,3]
+        }
+    })
+      let user = await userModel.create({
+            
+        full_name:req.body.full_name,
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password,
+        roles:data.map(val => val._id)
+       } );
      
           return res.json(user)
      

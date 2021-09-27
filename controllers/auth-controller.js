@@ -1,8 +1,9 @@
 const userModel = require('../models/user-model');
-
+const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const  jwt_key = process.env.JWT_KEY 
 
+const { jwt_key } = require('../config/vars')
+const roleModel = require('../models/role-model');
 
 exports.login = async (req, res, next) => {
     try {
@@ -23,7 +24,7 @@ exports.login = async (req, res, next) => {
             return res.json({
 
                 ...user._doc,
-                token : jwt.sign({ data: user._doc, exp: Math.floor(Date.now() / 1000) + (60 * 60), }, 'sampleRandomKey', { algorithm: 'HS256' })
+                token : jwt.sign({ data: user._doc, exp: Math.floor(Date.now() / 1000) + (60 * 60), }, jwt_key, { algorithm: 'HS256' })
                
             })
         } else {
@@ -46,22 +47,45 @@ exports.login = async (req, res, next) => {
 }
 
 
-exports.signup = async (req, res) => {
-    let user = req.body
 
-    if (!user) {
-        return err;
-    }
-    await userModel.create((error, user) => {
-        if (error) {
-            return req.json({
-                error: true,
-                message: error
-            })
-        }
-
+exports.signup = async(req,res)=>{
+  try {
+    const schema = Joi.object({
+        full_name:Joi.string().required(),
+        username: Joi.string()
+            .alphanum().required(),
+    
+        password: Joi.string()
+            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+        email: Joi.string()
+            .email().required()
     })
+    if(schema.validate(req.body).error){
+        throw new Error(schema.validate(req.body).error)
+    }
+    let data = await roleModel.find({
+        name: {
+            $in: 'member'// [1,2,3]
+        }
+    })
+      let user = await userModel.create({
+            
+        full_name:req.body.full_name,
+        username:req.body.username,
+        email:req.body.email,
+        password:req.body.password,
+        roles:data.map(val => val._id)
+       } );
+     
+          return res.json(user)
+     
 
+  } catch (error) {
+      res.status(400).json({
+           error : true,
+           message:error.message
 
+      })
+  }
 
 }
