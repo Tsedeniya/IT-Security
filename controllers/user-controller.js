@@ -1,11 +1,7 @@
 const Joi = require('joi');
 const userModel = require('../models/user-model');
 const roleModel = require('../models/role-model');
-role = [
-    {
-        roles:['member']
-    }
-]
+
 exports.create = async(req,res)=>{
   try {
     const schema = Joi.object({
@@ -50,7 +46,7 @@ exports.create = async(req,res)=>{
 
 exports.getUserById = async (req, res) => {
     try {
-        let user = await userModel.findById(req.params.id);
+        let user = await userModel.findById(req.params.id).populate("feedback");
         if (user) {
             return res.json(user)
         }
@@ -135,3 +131,5 @@ exports.deleteUser = async (req, res) => {
     }
 
 }
+
+

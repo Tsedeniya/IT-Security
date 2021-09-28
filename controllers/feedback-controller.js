@@ -6,19 +6,13 @@ const userModel = require('../models/user-model');
 exports.create = async(req,res)=>{
   try {
     var userId = req.params.id
-
-    var file;
-   
-     
     let updatedfeedback = new feedbackModel({
         Name:req.body.Name,
         email:req.body.email,
         Comment:req.body.Comment,
         
     })
-    if (req.file) {
-        updatedfeedback.Commentfile = req.file.path;
-      }
+   
     updatedfeedback.save().then(docComment => {
         console.log("\n>> Created Comment:\n", docComment);
     
@@ -43,7 +37,7 @@ return res.json(updatedfeedback)
 }
 
 exports.getFeedbackById = async (req, res) => {
-    try {s
+    try {
         let feedback = await feedbackModel.findById(req.params.id);
         if (feedback) {
             return res.json(feedback)

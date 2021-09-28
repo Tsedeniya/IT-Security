@@ -9,7 +9,8 @@ permissions =[
     'delete feedback',
     'update feedback',
     'view feedback',
-    'view all feedbacks'
+    'view all feedbacks',
+    'view user feedback'
     
 
     
@@ -24,6 +25,8 @@ roles={
     'delete feedback',
     'update feedback',
     'view feedback',
+    'view user feedback',
+    'update user',
     ]
 }
 

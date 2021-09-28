@@ -7,7 +7,7 @@ router.get('/',hasPermissions(['veiw all feedback']),feedbackController.getAllFe
 
 router.get('/:id',hasPermissions(['view feedback']),feedbackController.getFeedbackById);
   
-router.post('/create/:id',hasPermissions(['create feedback']),upload.single('comment file'), feedbackController.create);
+router.post('/create/:id',hasPermissions(['create feedback']),upload.single('file'), feedbackController.create);
 
  
 router.delete('/delete/:id' ,hasPermissions(['delete feedback']),feedbackController.deleteFeedback);
