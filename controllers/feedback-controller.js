@@ -6,7 +6,7 @@ var path = require('path');
 exports.create = async(req,res)=>{
   try {
     let sampleFile;
-    let uploadPath = null;
+    let uploadPath = "";
   
     if (req.files && req.files.Commentfile ) {
         sampleFile = req.files.Commentfile;
@@ -112,32 +112,30 @@ exports.getAllFeedbacks = async (req, res) => {
 
 exports.updateFeedback = async (req, res) => {
     try {
+        let feedback = await feedbackModel.findById(req.params.id);
+        let uploadPath = "";
         if (req.files && req.files.Commentfile ) {
-            sampleFile = req.files.Commentfile;
-            uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;
-          
+            let sampleFile = req.files.Commentfile;
+            uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;          
         
             err = sampleFile.mv(uploadPath,  function(err) {
               if (err){
                   this.err = err;
-                
-        
               }     
             });
             if (err){
                 return res.status(400).send(err);
             }
-          
+            feedback.Commentfile = uploadPath;
         }
-        let feedback = await feedbackModel.findById(req.params.id);
-
+    
         if (feedback) {
-            feedback = await feedback.updateOne({ _id: user._id }, req.body);
+            await feedback.updateOne({ _id: feedback._id }, req.body);
 
             return res.json(feedback)
 
         }
-        throw new Error('user doesn\'t exits')
+        throw new Error('feedback doesn\'t exits')
     } catch (error) {
         res.status(400).json({
             error: true,

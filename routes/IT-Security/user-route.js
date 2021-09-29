@@ -5,7 +5,7 @@ const userController = require('../../controllers/user-controller');
   
 router.get('/',hasPermissions(['view all users']),userController.getAllUsers)
 
-router.get('/:id',hasPermissions(['view user']), userController.getUserById);
+router.get('/:id',hasPermissions(['view feedback']), userController.getUserById);
 router.delete('/delete/:id',hasPermissions(['delete user']) ,userController.deleteUser);
   
 router.patch('/update/:id',hasPermissions(['update user']),userController.updateUser)
