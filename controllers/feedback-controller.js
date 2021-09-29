@@ -148,7 +148,7 @@ exports.updateFeedback = async (req, res) => {
         }
     
         if (feedback) {
-            feedback = await feedback.findByIdAndUpdate(feedback._id, req.body);
+            feedback = await feedbackModel.findByIdAndUpdate(feedback._id, req.body);
 
             return res.json(feedback)
 
