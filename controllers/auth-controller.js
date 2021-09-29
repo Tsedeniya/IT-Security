@@ -21,6 +21,7 @@ exports.login = async (req, res, next) => {
             user._doc.permissions = Array.from(new Set([...user._doc.permissions.map(v => v.name), ...permissions ]))
 
             user._doc.roles = user._doc.roles.map(role => role.name)
+            req.brute.reset();
             return res.json({
 
                 ...user._doc,

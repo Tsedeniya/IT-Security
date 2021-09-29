@@ -10,16 +10,15 @@ var allrouters = require('./routes/It-secuity.route');
 const { jwt_key, port } = require('./config/vars');
 const { routes } = require('./config/route');
 require('dotenv').config();
-
 const mongoose = require('./config/mongoose');
 
 
 const app = express();
-
 mongoose.connect();
 
 
 //app.use('/uploads', express.static('uploads'));
+
 app.use(fileUpload());
 app.use(cors());
 app.use(logger('dev'));
@@ -46,10 +45,10 @@ app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  console.log(err.message)
   // render the error page
   res.status(err.status || 500);
-  res.send('error');
+  res.send('An error occured');
 });
 
 module.exports = app;
