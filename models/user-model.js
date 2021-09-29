@@ -8,9 +8,9 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true, minlength: 8, maxlength: 128,required:true},
     roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Roles' }],
     permissions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Permissions' }],
-    feedback:{type:mongoose.Schema.Types.ObjectId,
+    feedback:[{type:mongoose.Schema.Types.ObjectId,
       ref:"feedback"
-   },
+   }],
     last_login: { type: Date },
     created_at: { type: Date, default: new Date() },
     updated_at: { type: Date, default: new Date() }

@@ -2,9 +2,11 @@ const Joi = require('joi');
 const feedbackModel = require('../models/feedback-model');
 const userModel = require('../models/user-model');
 var path = require('path');
+const fs = require('fs')
 
 exports.create = async(req,res)=>{
   try {
+    const{user} = req;
     let sampleFile;
     let uploadPath = "";
   
@@ -25,17 +27,15 @@ exports.create = async(req,res)=>{
         }
       
     }
-
-  
-   
-
     var userId = req.params.id
+if(user.data._id == userId ){
+
+    
     let updatedfeedback = new feedbackModel({
         Name:req.body.Name,
         email:req.body.email,
         Comment:req.body.Comment,
-        Commentfile:uploadPath
-        
+        Commentfile:uploadPath.split(path.join(__dirname+ '/../' )).pop()        
     })
    
     updatedfeedback.save().then(docComment => {
@@ -51,7 +51,15 @@ exports.create = async(req,res)=>{
 return res.json(updatedfeedback)
      
 
-  } catch (error) {
+  }
+  else{
+    return res.status(400).json({
+        error : true,
+        message:'invalid user'
+  })
+}
+  }
+ catch (error) {
       return res.status(400).json({
            error : true,
            message:error.message
@@ -80,13 +88,23 @@ exports.getFeedbackById = async (req, res) => {
                 error: true,
                 message: error.message
             });
-
-
-
     }
-
-
-
+}
+exports.downloadfeedback = async (req, res) => {
+    try {
+        if (fs.existsSync(path.join(__dirname+ '/../public', 'uploads/')+req.params.path)) {
+            return res.status(200).download(path.join(__dirname+ '/../public', 'uploads/')+req.params.path);
+        }
+        else {
+            throw new Error('File does\'t exist.')
+        }
+    } catch (error) {
+        res.status(400).json(
+            {
+                error: true,
+                message: error.message
+            });
+    }    
 }
 
 exports.getAllFeedbacks = async (req, res) => {
@@ -126,7 +144,7 @@ exports.updateFeedback = async (req, res) => {
             if (err){
                 return res.status(400).send(err);
             }
-            feedback.Commentfile = uploadPath;
+            feedback.Commentfile = uploadPath.split(path.join(__dirname))[1];
         }
     
         if (feedback) {

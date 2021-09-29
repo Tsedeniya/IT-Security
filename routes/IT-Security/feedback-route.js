@@ -9,13 +9,12 @@ router.get('/:id',hasPermissions(['view feedback']),feedbackController.getFeedba
 
 router.post('/create/:id',hasPermissions(['create feedback']),  feedbackController.create);
 
- 
+router.get('/download/:path', hasPermissions(['view feedback']),feedbackController.downloadfeedback);
+
 router.delete('/delete/:id' ,hasPermissions(['delete feedback']),feedbackController.deleteFeedback);
   
 router.patch('/update/:id',hasPermissions(['update feedback']),feedbackController.updateFeedback)
 
-  
-  
 
 module.exports = router;
 
