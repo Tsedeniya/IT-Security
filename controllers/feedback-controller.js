@@ -148,7 +148,7 @@ exports.updateFeedback = async (req, res) => {
         }
     
         if (feedback) {
-            await feedback.updateOne({ _id: feedback._id }, req.body);
+            feedback = await feedback.findByIdAndUpdate(feedback._id, req.body);
 
             return res.json(feedback)
 
