@@ -4,7 +4,7 @@ var path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 var jwt = require('express-jwt');
-
+const fileUpload = require('express-fileupload');
 const cors = require('cors')
 var allrouters = require('./routes/It-secuity.route');
 const { jwt_key, port } = require('./config/vars');
@@ -19,11 +19,13 @@ const app = express();
 mongoose.connect();
 
 
-app.use('/uploads', express.static('uploads'));
+//app.use('/uploads', express.static('uploads'));
+app.use(fileUpload());
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cookieParser());
 

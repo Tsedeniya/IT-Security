@@ -1,15 +1,40 @@
 const Joi = require('joi');
 const feedbackModel = require('../models/feedback-model');
 const userModel = require('../models/user-model');
-
+var path = require('path');
 
 exports.create = async(req,res)=>{
   try {
+    let sampleFile;
+    let uploadPath = null;
+  
+    if (req.files && req.files.Commentfile ) {
+        sampleFile = req.files.Commentfile;
+        uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;
+      
+    
+        err = sampleFile.mv(uploadPath,  function(err) {
+          if (err){
+              this.err = err;
+            
+    
+          }     
+        });
+        if (err){
+            return res.status(400).send(err);
+        }
+      
+    }
+
+  
+   
+
     var userId = req.params.id
     let updatedfeedback = new feedbackModel({
         Name:req.body.Name,
         email:req.body.email,
         Comment:req.body.Comment,
+        Commentfile:uploadPath
         
     })
    
@@ -27,11 +52,12 @@ return res.json(updatedfeedback)
      
 
   } catch (error) {
-      res.status(400).json({
+      return res.status(400).json({
            error : true,
            message:error.message
 
       })
+   
   }
 
 }
@@ -86,6 +112,23 @@ exports.getAllFeedbacks = async (req, res) => {
 
 exports.updateFeedback = async (req, res) => {
     try {
+        if (req.files && req.files.Commentfile ) {
+            sampleFile = req.files.Commentfile;
+            uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;
+          
+        
+            err = sampleFile.mv(uploadPath,  function(err) {
+              if (err){
+                  this.err = err;
+                
+        
+              }     
+            });
+            if (err){
+                return res.status(400).send(err);
+            }
+          
+        }
         let feedback = await feedbackModel.findById(req.params.id);
 
         if (feedback) {
