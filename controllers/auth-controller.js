@@ -57,7 +57,7 @@ exports.signup = async(req,res)=>{
             .alphanum().required(),
     
         password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+            .required(),
         email: Joi.string()
             .email().required()
     })
