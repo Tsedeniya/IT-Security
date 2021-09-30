@@ -6,39 +6,17 @@ const fs = require('fs')
 
 exports.create = async(req,res)=>{
   try {
-    const{user} = req;
-    let sampleFile;
-    let uploadPath = "";
-  
-    if (req.files && req.files.Commentfile ) {
-        sampleFile = req.files.Commentfile;
-        uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;
-      
     
-        err = sampleFile.mv(uploadPath,  function(err) {
-          if (err){
-              this.err = err;
-            
     
-          }     
-        });
-        if (err){
-            return res.status(400).send(err);
-        }
-      
-    }
     var userId = req.params.id
-if(user.data._id == userId ){
-
-    
-    let updatedfeedback = new feedbackModel({
+    let createfeedback = new feedbackModel({
         Name:req.body.Name,
         email:req.body.email,
         Comment:req.body.Comment,
-        Commentfile:uploadPath.split(path.join(__dirname+ '/../' )).pop()        
+        Commentfile:req.body.Commentfile        
     })
    
-    updatedfeedback.save().then(docComment => {
+    createfeedback.save().then(docComment => {
         console.log("\n>> Created Comment:\n", docComment);
     
         return userModel.findByIdAndUpdate(
@@ -48,16 +26,11 @@ if(user.data._id == userId ){
         );
       });
      
-return res.json(updatedfeedback)
+return res.json(createfeedback)
      
 
-  }
-  else{
-    return res.status(400).json({
-        error : true,
-        message:'invalid user'
-  })
-}
+  
+  
   }
  catch (error) {
       return res.status(400).json({
@@ -131,21 +104,7 @@ exports.getAllFeedbacks = async (req, res) => {
 exports.updateFeedback = async (req, res) => {
     try {
         let feedback = await feedbackModel.findById(req.params.id);
-        let uploadPath = "";
-        if (req.files && req.files.Commentfile ) {
-            let sampleFile = req.files.Commentfile;
-            uploadPath = path.join(__dirname+ '/../public', 'uploads/') + Date.now().toString()+sampleFile.name;          
         
-            err = sampleFile.mv(uploadPath,  function(err) {
-              if (err){
-                  this.err = err;
-              }     
-            });
-            if (err){
-                return res.status(400).send(err);
-            }
-            feedback.Commentfile = uploadPath.split(path.join(__dirname))[1];
-        }
     
         if (feedback) {
             feedback = await feedbackModel.findByIdAndUpdate(feedback._id, req.body);

@@ -1,14 +1,14 @@
 const router = require('express-promise-router')();
-var {hasPermissions} = require('../../middleware/auth')
+var {hasPermissions,verifyToken} = require('../../middleware/auth')
 const userController = require('../../controllers/user-controller');
 
   
 router.get('/',hasPermissions(['view all users']),userController.getAllUsers)
 
-router.get('/:id',hasPermissions(['view feedback']), userController.getUserById);
-router.delete('/delete/:id',hasPermissions(['delete user']) ,userController.deleteUser);
+router.get('/:id',verifyToken(),hasPermissions(['view feedback']), userController.getUserById);
+router.delete('/delete/:id',verifyToken(),hasPermissions(['delete user']) ,userController.deleteUser);
   
-router.patch('/update/:id',hasPermissions(['update user']),userController.updateUser)
+router.patch('/update/:id',verifyToken(),hasPermissions(['update user']),userController.updateUser)
 router.post('/profile',(req,res)=>{
     const {user} = req
     if(user){

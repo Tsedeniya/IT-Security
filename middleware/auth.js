@@ -30,16 +30,22 @@ exports.hasPermissions = (permissions) => (req, res, next)  => {
 }
 
 
-exports.nest = (i, i1 = null, link2 = 'parent') => {
-    if(!Array.isArray(i)) {
-        throw new TypeError('Items should be a valid array')
-    }
-     var result = (items, id = null, link = 'parent') => items
-    .filter(item => item[link] === id)
-    .map(item => ({
-      ...item,
-      text: item.name, value: item.id, children: result(items, item.id)
-    }));
+exports.isAdmin = (req,res,next)=>{
 
-    return result(i, i1, link2)
-} 
+}
+
+exports.isMember = (req,res,next)=>{
+
+}
+exports.verifyToken = ()=>(req,res,next)=>{
+    const { user } = req
+    if(!user){
+        return res.status(403).send({
+            message: "No token provided!"
+          });
+    }
+    user.data._id == req.userId
+    next()
+    
+
+}
