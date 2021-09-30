@@ -7,7 +7,20 @@ const fs = require('fs')
 exports.create = async(req,res)=>{
   try {
     
+    const schema = Joi.object({
+        Name:Joi.string().required(),
+        email: Joi.string()
+        .email().required(),
+        Comment: Joi.string()
+            .required(),
+        Commentfile: Joi.string()
+            .required()
     
+       
+    })
+    if(schema.validate(req.body).error){
+        throw new Error(schema.validate(req.body).error)
+    }
     var userId = req.params.id
     let createfeedback = new feedbackModel({
         Name:req.body.Name,
@@ -103,9 +116,22 @@ exports.getAllFeedbacks = async (req, res) => {
 
 exports.updateFeedback = async (req, res) => {
     try {
-        let feedback = await feedbackModel.findById(req.params.id);
-        
+
+        const schema = Joi.object({
+        Name:Joi.string().required(),
+        email: Joi.string()
+        .email().required(),
+        Comment: Joi.string()
+            .required(),
+        Commentfile: Joi.string()
+            .required()
     
+       
+    })
+    if(schema.validate(req.body).error){
+        throw new Error(schema.validate(req.body).error)
+    }
+    let feedback = await feedbackModel.findById(req.params.id);
         if (feedback) {
             feedback = await feedbackModel.findByIdAndUpdate(feedback._id, req.body);
 

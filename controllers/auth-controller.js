@@ -13,8 +13,7 @@ exports.signup = async(req,res)=>{
         full_name:Joi.string().required(),
         username: Joi.string()
             .alphanum().required(),
-    
-        password: Joi.string()
+    password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$'))
             .required(),
         email: Joi.string()
             .email().required()
