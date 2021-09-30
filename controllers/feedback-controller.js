@@ -13,8 +13,7 @@ exports.create = async(req,res)=>{
         .email().required(),
         Comment: Joi.string()
             .required(),
-        Commentfile: Joi.string()
-            .required()
+        
     
        
     })

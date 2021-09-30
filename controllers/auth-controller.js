@@ -49,6 +49,7 @@ exports.signup = async(req,res)=>{
 }
 exports.login = async (req, res, next) => {
     try {
+        //const csurf_token = req.csrfToken()
         const user = await userModel.findOne({
             username: req.body.username
         }).populate({ path: 'roles', populate: {path: 'permissions'} });
@@ -67,7 +68,8 @@ exports.login = async (req, res, next) => {
             return res.json({
 
                 ...user._doc,
-                token : jwt.sign({ data: user._doc, exp: Math.floor(Date.now() / 1000) + (60 * 60), }, jwt_key, { algorithm: 'HS256' })
+                token : jwt.sign({ data: user._doc, exp: Math.floor(Date.now() / 1000) + (60 * 60), }, jwt_key, { algorithm: 'HS256' }),
+           
                
             })
         } else {
